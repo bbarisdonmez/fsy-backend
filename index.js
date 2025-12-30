@@ -15,6 +15,15 @@ mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log('MongoDB Bağlandı'))
   .catch(err => console.error(err));
 
+app.get('/api/health', (req, res) => {
+  res.json({ 
+    status: 'active', 
+    uptime: process.uptime(),
+    timestamp: Date.now(),
+    message: 'FindYourSize API Systems Operational'
+  });
+});
+
 // --- KAYIT OL (REGISTER) ---
 app.post('/api/register', async (req, res) => {
   try {
@@ -111,9 +120,6 @@ app.post('/api/upgrade', async (req, res) => {
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     
-    // Gerçek hayatta burada Iyzico/Stripe ödeme doğrulaması olur.
-    // Şimdilik doğrudan kullanıcıyı Pro yapıyoruz.
-    
     const user = await User.findByIdAndUpdate(decoded.id, { isPro: true }, { new: true });
     
     res.json({ success: true, user: { name: user.name, email: user.email, isPro: user.isPro } });
@@ -121,5 +127,6 @@ app.post('/api/upgrade', async (req, res) => {
     res.status(500).json({ message: 'İşlem başarısız' });
   }
 });
+
 
 app.listen(5000, () => console.log('Sunucu 5000 portunda çalışıyor.'));
