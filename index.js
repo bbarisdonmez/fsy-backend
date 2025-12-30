@@ -129,4 +129,6 @@ app.post('/api/upgrade', async (req, res) => {
 });
 
 
-app.listen(5000, () => console.log('Sunucu 5000 portunda çalışıyor.'));
+app.listen(5000, '0.0.0.0', () => {
+  console.log('Sunucu 0.0.0.0:5000 üzerinde çalışıyor.');
+});
